@@ -8,6 +8,8 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
         <script src="https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js"></script>
+        <script src="js/leaflet-image.js"></script>
+        <script>window.L_PREFER_CANVAS = true;</script>
         <link href="https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css" rel='stylesheet' />
             
         <style type="text/css">
@@ -32,34 +34,6 @@
     </head>
     
     <body>
-	<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQYvqL_E-Sb2rTPlv-FvV3JYp-4CGOj4o&sensor=false">
-    </script>
-    <script type="text/javascript">
-        var map = null;
-            function showlocation() {
-               // One-shot position request.
-                navigator.geolocation.getCurrentPosition(callback);
-            }
-         
-      function callback(position) {
-         
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-         
-             document.getElementById('latitude').innerHTML = lat;
-         document.getElementById('longitude').innerHTML = lon;
-             
-        var latLong = new google.maps.LatLng(lat, lon);
-         
-                var marker = new google.maps.Marker({
-                    position: latLong
-                });      
-                 
-                marker.setMap(map);
-        map.setZoom(10);
-        map.setCenter(marker.getPosition());
-      }
         <div id="fb-root"></div>
         <script>
             window.fbAsyncInit = function () {
@@ -101,6 +75,9 @@
             <img id="npc3" src="img/npc3.png" alt="" />
             <img id="npc4" src="img/npc4.png" alt="" />
             <img id="background" src="img/background.png" alt="" />
+            
+        </div>
+        <div id="map-image">
         </div>
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
@@ -120,7 +97,7 @@
                 // on it, and add a single marker.
                 map.on('locationfound', function(e) {
                        map.fitBounds(e.bounds);
-                       map.setZoom(8);
+                       map.setZoom(14);
                        map.featureLayer.setGeoJSON({
                                                    type: "Feature",
                                                    geometry: {
@@ -132,6 +109,20 @@
                                                    'marker-symbol': 'star-stroked'
                                                    }
                                                    });
+                       setTimeout(function() {
+                                  leafletImage(map, function(err, canvas) {
+                                    // now you have canvas
+                                    // example thing to do with that canvas:
+                                    var img = document.createElement('img');
+                                    var dimensions = map.getSize();
+                                    img.id = 'mapImage';
+                                    img.width = dimensions.x;
+                                    img.height = dimensions.y;
+                                    img.src = canvas.toDataURL();
+                                    document.getElementById('map-image').innerHTML = '';
+                                    document.getElementById('map-image').appendChild(img);
+                                    });
+                                  }, 200);
                        
                        });
                        
@@ -185,7 +176,7 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-                    picture: 'http://maps.googleapis.com/maps/api/staticmap?center='+
+                    place: 'undefined'
                 };
                 
                 function callback(response) {

@@ -56,7 +56,7 @@
         </div>
         <div style="position: absolute; top: 0px; display: none">
             <img id="strike" src="img/sad-face-small.png" alt="" />
-            <img id="yummy" src="img/yummy.jpg" alt="" />
+            <img id="yummy" src="img/yummy.png" alt="" />
         </div>
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
@@ -69,7 +69,7 @@
                     picture: "http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg",
                     name: '#BOTY',
                     caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
-					description: 'Action links are awesome.'
+                    description: 'Action links are awesome.'
                 };
                 
                 function callback(response) {
@@ -328,11 +328,11 @@
                                                // display snazzy wave effect
                                                for (i = 0; i < POP.wave.total; i++) {
                                                    
-                                                   //            POP.Draw.circle(
-                                                   //                        POP.wave.x + POP.wave.offset +  (i * POP.wave.r),
-                                                   //                        POP.wave.y,
-                                                   //                        POP.wave.r,
-                                                   //                        '#fff');
+                                                               POP.Draw.circle(
+                                                                           POP.wave.x + POP.wave.offset +  (i * POP.wave.r),
+                                                                           POP.wave.y,
+                                                                           POP.wave.r,
+                                                                           '#fff');
                                                }
                                                
                                                // cycle through all entities and render to canvas
@@ -460,6 +460,7 @@
             };
             
             this.render = function() {
+                
                 POP.Draw.image(document.getElementById("yummy"), this.x, this.y);
                 //POP.Draw.circle(this.x, this.y, this.r, 'rgba(255,0,0,'+this.opacity+')');
             };
@@ -556,13 +557,14 @@
             
             
             this.render = function() {
-                POP.Draw.circle(this.x, this.y, this.r, this.col);
+                //POP.Draw.circle(this.x, this.y, this.r, this.col);
             };
             
         };
         
         function replay() {
             POP.score.escaped = 0;
+            POP.score.hit = 0;
             POP.Draw.clear();
             document.getElementById("sad-face").style.display = "none";
             POP.init();

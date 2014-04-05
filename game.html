@@ -605,10 +605,22 @@
         function replay() {
             POP.score.escaped = 0;
             POP.score.hit = 0;
+            speed = 2;
             POP.Draw.clear();
             document.getElementById("sad-face").style.display = "none";
             POP.init();
         }
+        
+        document.getElementById("replay").addEventListener('touchstart', function() {
+                                                           if (POP.ios) {
+                                                           replay();
+                                                           }
+                                                           });
+                                                           document.getElementById("myLink").addEventListener('touchstart', function() {
+                                                                                                              if (POP.ios) {
+                                                                                                              postToFeed();
+                                                                                                              }
+                                                                                                              });
         
         window.addEventListener('load', POP.init, false);
         window.addEventListener('resize', POP.resize, false);

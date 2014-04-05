@@ -56,12 +56,13 @@
         <div style="position: absolute; top: 0px; display: none">
             <img id="strike" src="img/sad-face-small.png" alt="" />
             <img id="yummy" src="img/yummy.png" alt="" />
+            <img id="foodtruck" src="img/foodtruck.png" alt="" />
         </div>
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
             
             function postToFeed() {
-			 FB.init({
+                FB.init({
                         appId: '631163546954262',
                         status: true, // check login status
                         cookie: true, // enable cookies to allow the server to access the session
@@ -103,11 +104,11 @@
                 // call the API
                 var obj = {
                     method: 'feed',
-                    link: 'http://wabash.parseapp.com/game.html',
-                    picture: "http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg",
-                    name: '#BOTY',
-                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
-                    description: 'Action links are awesome.'
+//                    link: 'http://wabash.parseapp.com/game.html',
+//                    picture: "http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg",
+//                    name: '#BOTY',
+//                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
+//                    description: 'Action links are awesome.'
                 };
                 
                 function callback(response) {
@@ -117,7 +118,8 @@
                 FB.ui(obj, callback);
             }
         
-		</script>
+            </script>
+        
         <script>
             window.requestAnimFrame = (function(){
                                        return  window.requestAnimationFrame       ||
@@ -361,7 +363,8 @@
                                                
                                                POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, '#036');
                                                
-                                               POP.Draw.rect(150,150,100,200, 'WHITE');
+                                               POP.Draw.image(document.getElementById("foodtruck"), 150, 150);
+                                               //POP.Draw.rect(150,150,100,200, 'WHITE');
 //                                               // display snazzy wave effect
 //                                               for (i = 0; i < POP.wave.total; i++) {
 //                                                   

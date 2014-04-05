@@ -28,7 +28,7 @@
                 top:0;
                 bottom:0;
                 width:300px;
-                height:300px
+                height:300px;
             }
         </style>
     </head>
@@ -57,7 +57,9 @@
             </script>
         
         <canvas></canvas>
-        <div id="map"></div>
+        <div>
+            <div id="map"></div>
+        </div>
         <div id="sad-face" style="position: absolute; top: 30%; left: 46%; display: none; color: White;">
             <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
             <center>
@@ -84,13 +86,13 @@
             
             var map = L.mapbox.map('map', 'examples.map-9ijuk24y');
             
-            
+            var dataURL = "";
             
             function postToFeed() {
                 if (!navigator.geolocation) {
                     alert('geolocation is not available');
                 } else {
-                        map.locate();
+                    map.locate();
                 }
                 
                 // Once we've got a position, zoom and center the map
@@ -119,6 +121,7 @@
                                     img.width = dimensions.x;
                                     img.height = dimensions.y;
                                     img.src = canvas.toDataURL();
+                                    dataURL = canvas.toDataURL();
                                     document.getElementById('map-image').innerHTML = '';
                                     document.getElementById('map-image').appendChild(img);
                                     });
@@ -132,6 +135,7 @@
                               alert('position could not be found');
                               });
                 
+                setTimeout(function() {
                 FB.init({
                         appId: '631163546954262',
                         status: true, // check login status
@@ -176,7 +180,8 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-                    pitcure: canvas.toDataURL();
+                    picture: dataURL
+
                 };
                 
                 function callback(response) {
@@ -184,6 +189,7 @@
                 }
                 
                 FB.ui(obj, callback);
+                           }, 500);
             }
         
             </script>
@@ -724,7 +730,9 @@
         window.addEventListener('resize', POP.resize, false);
         
             </script>
+    <div id="hidden">
         
+    </div>
         
     </body>
 </html>

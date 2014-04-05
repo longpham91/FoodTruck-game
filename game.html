@@ -21,6 +21,13 @@
                 margin: 0 auto;
                 background: #fff;
             }
+            #map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                width:300px;
+                height:300px
+            }
         </style>
     </head>
     
@@ -76,6 +83,7 @@
             </script>
         
         <canvas></canvas>
+        <div id="map"></div>
         <div id="sad-face" style="position: absolute; top: 30%; left: 46%; display: none; color: White;">
             <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
             <center>
@@ -97,7 +105,42 @@
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
             
+            var map = L.mapbox.map('map', 'examples.map-9ijuk24y');
+            
+            
+            
             function postToFeed() {
+                if (!navigator.geolocation) {
+                    alert('geolocation is not available');
+                } else {
+                        map.locate();
+                }
+                
+                // Once we've got a position, zoom and center the map
+                // on it, and add a single marker.
+                map.on('locationfound', function(e) {
+                       map.fitBounds(e.bounds);
+                       map.setZoom(8);
+                       map.featureLayer.setGeoJSON({
+                                                   type: "Feature",
+                                                   geometry: {
+                                                   type: "Point",
+                                                   coordinates: [e.latlng.lng, e.latlng.lat]
+                                                   },
+                                                   properties: {
+                                                   'marker-color': '#000',
+                                                   'marker-symbol': 'star-stroked'
+                                                   }
+                                                   });
+                       
+                       });
+                       
+                       // If the user chooses not to allow their location
+                       // to be shared, display an error message.
+                       map.on('locationerror', function() {
+                              alert('position could not be found');
+                              });
+                
                 FB.init({
                         appId: '631163546954262',
                         status: true, // check login status
@@ -114,7 +157,7 @@
                                            // The response object is returned with a status field that lets the app know the current
                                            // login status of the person. In this case, we're handling the situation where they
                                            // have logged in to the app.
-                                           testAPI();
+                                           //postToFeed();
                                            } else if (response.status === 'not_authorized') {
                                            // In this case, the person is logged into Facebook, but not into the app, so we call
                                            // FB.login() to prompt them to do so.
@@ -155,6 +198,8 @@
             </script>
         
         <script>
+            
+            
             window.requestAnimFrame = (function(){
                                        return  window.requestAnimationFrame       ||
                                        window.webkitRequestAnimationFrame ||

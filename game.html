@@ -14,35 +14,36 @@ canvas { display: block; margin: 0 auto; background: #fff; }
 </head>
 
 <body>
-<div id="fb-root"></div>
+    <div id="fb-root"></div>
     <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '631163546954262',
-          status     : true,
-          xfbml      : true
-        });
-      };
+        window.fbAsyncInit = function() {
+            FB.init({
+                    appId      : '631163546954262',
+                    status     : true,
+                    xfbml      : true
+                    });
+        };
+    
+    (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+        </script>
 
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/all.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
 <canvas></canvas>
 <div id="sad-face" style="position: absolute; top: 20%; left: 46%; display: none; color: White;">
     <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
     <center>
         <a href="#" onClick="document.location.href=postToFeed();">Share your score!</a>
         <br />
-        <a href="#">Play Again</<a>
+        <a href="#" id="replay" onclick="replay();">Play Again</<a>
     </center>
 </div>
 <div style="position: absolute; top: 0px; display: none">
-    <img id="strike" src="img/sad-face.png" alt="" />
+    <img id="strike" src="img/sad-face-small.png" alt="" />
 </div>
 <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
 <script>
@@ -52,7 +53,7 @@ function postToFeed() {
   var obj = {
     method: 'feed',
     link: 'http://wabash.parseapp.com/game.html',
-    picture: 'http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg'
+    picture: "http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg",
     name: '#BOTY',
     caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
     actions: [
@@ -410,7 +411,7 @@ POP.Draw = {
     },
     
     image: function(image, x, y) {
-        POP.ctx.drawImage(image, x, y, 25, 25);
+        POP.ctx.drawImage(image, x, y);
     }
 
 };
@@ -550,6 +551,13 @@ POP.Particle = function(x, y,r, col) {
     };
 
 };
+
+function replay() {
+    POP.score.escaped = 0;
+    POP.Draw.clear();
+    document.getElementById("sad-face").style.display = "none";
+    POP.init();
+}
 
 window.addEventListener('load', POP.init, false);
 window.addEventListener('resize', POP.resize, false);

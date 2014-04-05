@@ -85,7 +85,7 @@
         <script>
             
             var map = L.mapbox.map('map', 'examples.map-9ijuk24y');
-            
+            var img = null;
             var dataURL = "";
             
             function postToFeed() {
@@ -180,7 +180,9 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-                    picture: dataURL
+					var encodedPng = dataURL.substring(dataURL.indexOf(',') + 1, dataURL.length);
+					var decodedPng = Base64Binary.decode(encodedPng);
+					picture: dataURL
 
                 };
                 

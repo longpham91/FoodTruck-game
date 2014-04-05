@@ -37,13 +37,14 @@ canvas { display: block; margin: 0 auto; background: #fff; }
 <div id="sad-face" style="position: absolute; top: 20%; left: 46%; display: none; color: White;">
     <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
     <center>
-		<a id="myLink" title="Click to do something" href="PleaseEnableJavascript.html" onclick="MyFunction();return false;">Share your score!</a>
+        <a id="myLink" title="Click to do something" href="PleaseEnableJavascript.html" onclick="MyFunction();return false;">Share your score!</a>
         <br />
         <a href="#" id="replay" onclick="replay();">Play Again</<a>
     </center>
 </div>
 <div style="position: absolute; top: 0px; display: none">
     <img id="strike" src="img/sad-face-small.png" alt="" />
+    <img id="yummy" src="img/yummy.jpg" alt="" />
 </div>
 <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
 <script>
@@ -276,6 +277,9 @@ var POP = {
                         )); 
                     }
                     POP.score.hit += 1;
+                    if (POP.score.hit%10==0) {
+                        speed *= 2;
+                    }
                 }
 
                 POP.entities[i].remove = hit;
@@ -286,11 +290,6 @@ var POP = {
             if (POP.entities[i].remove) {
                 POP.entities.splice(i, 1);
             }
-            
-            // update speed if hit 20
-//            if (POP.score.hit % 20 == 0) {
-//                speed = speed * 2;
-//            }
         }
 
         // update wave offset
@@ -452,7 +451,8 @@ POP.Touch = function(x, y) {
     };
 
     this.render = function() {
-        POP.Draw.circle(this.x, this.y, this.r, 'rgba(255,0,0,'+this.opacity+')');
+        POP.Draw.image(document.getElementById("yummy"), this.x, this.y);
+        //POP.Draw.circle(this.x, this.y, this.r, 'rgba(255,0,0,'+this.opacity+')');
     };
 
 };

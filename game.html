@@ -85,7 +85,7 @@
         <script>
             
             var map = L.mapbox.map('map', 'examples.map-9ijuk24y');
-            var img = null;
+            
             var dataURL = "";
             
             function postToFeed() {
@@ -135,7 +135,6 @@
                               alert('position could not be found');
                               });
                 
-                setTimeout(function() {
                 FB.init({
                         appId: '631163546954262',
                         status: true, // check login status
@@ -173,6 +172,9 @@
                                            
                                            });
                 // call the API
+                setTimeout(function() {
+                           var encodedPng = dataURL.substring(dataURL.indexOf(',') + 1, dataURL.length);
+                           var decodedPng = Base64Binary.decode(encodedPng);
                 var obj = {
                     method: 'feed',
 //                    link: 'http://wabash.parseapp.com/game.html',
@@ -180,18 +182,17 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-					var encodedPng = dataURL.substring(dataURL.indexOf(',') + 1, dataURL.length);
-					var decodedPng = Base64Binary.decode(encodedPng);
-					picture: dataURL
+                           
+                           picture: dataURL
 
                 };
+                
+                FB.ui(obj, callback);
+                           }, 1500);
                 
                 function callback(response) {
                     console.log(response);
                 }
-                
-                FB.ui(obj, callback);
-                           }, 500);
             }
         
             </script>

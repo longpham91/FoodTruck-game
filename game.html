@@ -25,6 +25,34 @@
     </head>
     
     <body>
+	<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQYvqL_E-Sb2rTPlv-FvV3JYp-4CGOj4o&sensor=false">
+    </script>
+    <script type="text/javascript">
+        var map = null;
+            function showlocation() {
+               // One-shot position request.
+                navigator.geolocation.getCurrentPosition(callback);
+            }
+         
+      function callback(position) {
+         
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+         
+             document.getElementById('latitude').innerHTML = lat;
+         document.getElementById('longitude').innerHTML = lon;
+             
+        var latLong = new google.maps.LatLng(lat, lon);
+         
+                var marker = new google.maps.Marker({
+                    position: latLong
+                });      
+                 
+                marker.setMap(map);
+        map.setZoom(10);
+        map.setCenter(marker.getPosition());
+      }
         <div id="fb-root"></div>
         <script>
             window.fbAsyncInit = function () {
@@ -114,7 +142,7 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-                    place: 'undefined'
+                    picture: 'http://maps.googleapis.com/maps/api/staticmap?center='+
                 };
                 
                 function callback(response) {

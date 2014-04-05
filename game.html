@@ -48,15 +48,20 @@
         <div id="sad-face" style="position: absolute; top: 30%; left: 46%; display: none; color: White;">
             <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
             <center>
-                <a id="myLink" title="Click to share on Facebook!" href="" onClick="postToFeed();return false;">Share your score!</a>
+                <a id="myLink" title="Click to share on Facebook!" href="#" onClick="postToFeed();return false;" style="color: blue;">Share your score!</a>
                 <br />
-                <a href="#" id="replay" onclick="replay();">Play Again</<a>
+                <a href="#" id="replay" onclick="replay();" style="color: blue;">Play Again</<a>
                     </center>
         </div>
         <div style="position: absolute; top: 0px; display: none">
             <img id="strike" src="img/sad-face-small.png" alt="" />
             <img id="yummy" src="img/yummy.png" alt="" />
             <img id="foodtruck" src="img/foodtruck.png" alt="" />
+            <img id="npc1" src="img/npc1.png" alt="" />
+            <img id="npc2" src="img/npc2.png" alt="" />
+            <img id="npc3" src="img/npc3.png" alt="" />
+            <img id="npc4" src="img/npc4.png" alt="" />
+            
         </div>
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
@@ -106,7 +111,7 @@
 //                    name: '#BOTY',
 //                    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
 //                    description: 'Action links are awesome.'
-					place
+                    place: 'undefined'
                 };
                 
                 function callback(response) {
@@ -562,6 +567,16 @@
             this.render = function() {
                 
                 POP.Draw.circle(this.x, this.y, this.r, 'rgba(255,255,255,1)');
+//                var random = Math.random();
+//                if (random > 0 && random <= 0.25) {
+//                    POP.Draw.image(document.getElementById("npc1", this.x, this.y));
+//                } else if (random > 0.25 && random <= 0.5) {
+//                    POP.Draw.image(document.getElementById("npc2", this.x, this.y));
+//                } else if (random > 0.5 && random <= 0.75) {
+//                    POP.Draw.image(document.getElementById("npc3", this.x, this.y));
+//                } else if (random > 0.75 && random <= 1) {
+//                    POP.Draw.image(document.getElementById("npc4", this.x, this.y));
+//                }
             };
             
         };

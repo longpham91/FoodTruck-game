@@ -7,17 +7,20 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         
+        <script src="https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js"></script>
+        <link href="https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css" rel='stylesheet' />
+            
         <style type="text/css">
             body {
                 margin: 0;
                 padding: 0;
                 background: #000;
             }
-        canvas {
-            display: block;
-            margin: 0 auto;
-            background: #fff;
-        }
+            canvas {
+                display: block;
+                margin: 0 auto;
+                background: #fff;
+            }
         </style>
     </head>
     
@@ -61,7 +64,7 @@
             <img id="npc2" src="img/npc2.png" alt="" />
             <img id="npc3" src="img/npc3.png" alt="" />
             <img id="npc4" src="img/npc4.png" alt="" />
-            
+            <img id="background" src="img/background.png" alt="" />
         </div>
         <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
         <script>
@@ -365,8 +368,8 @@
                                                var i;
                                                
                                                
-                                               POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, '#d9d9d9');
-                                               
+                                               //POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, '#d9d9d9');
+                                               POP.Draw.image(document.getElementById("background"), 0, 0);
                                                POP.Draw.image(document.getElementById("foodtruck"), 150, 150);
                                                //POP.Draw.rect(150,150,100,200, 'WHITE');
 //                                               // display snazzy wave effect

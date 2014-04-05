@@ -23,6 +23,9 @@ canvas { display: block; margin: 0 auto; background: #fff; }
         <a href="#">Play Again</<a>
     </center>
 </div>
+<div style="position: absolute; top: 0px; display: none">
+    <img id="strike" src="img/sad-face.png" alt="" />
+</div>
 <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
 <script>
 
@@ -313,7 +316,7 @@ var POP = {
         // display scores
         POP.Draw.text('Served: ' + POP.score.hit, 20, 30, 14, '#fff');
         POP.Draw.text('Left: ' + POP.score.escaped, 20, 50, 14, '#fff');
-        //POP.Draw.text('Accuracy: ' + POP.score.accuracy + '%', 20, 70, 14, '#fff');
+        POP.Draw.image(document.getElementById("strike"), 20, 70);
 
     },
 
@@ -386,6 +389,10 @@ POP.Draw = {
         POP.ctx.font = 'bold '+size+'px Monospace';
         POP.ctx.fillStyle = col;
         POP.ctx.fillText(string, x, y);
+    },
+    
+    image: function(image, x, y) {
+        POP.ctx.drawImage(image, x, y, 25, 25);
     }
 
 };

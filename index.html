@@ -1,401 +1,420 @@
 <!DOCTYPE HTML>
 <html lang="en">
-<head>
-<meta name="viewport" content="width=device-width, 
-    user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-<style type="text/css">
-body { margin: 0; padding: 0; background: #000;}
-canvas { display: block; margin: 0 auto; background: #fff; }
-</style>
-
-</head>
-
-<body>
-<canvas>
-</canvas>
-
-<div style="position: absolute; top: 20%; left: 40%; color: white;">
-    <h2>Welcome to TruckYummy!</h2>
-    <center>
-        <h3 style="margin-bottom: 0px;"><a href="#" onclick="testAPI();">Log in with Facebook!</a></h3>
     
-        <p>get 10% off</p>
-    </center>
-</div>
-<div id="fb-root"></div>
-<script>
-    window.fbAsyncInit = function() {
-        FB.init({
-                appId      : '631163546954262',
-                status     : true, // check login status
-                cookie     : true, // enable cookies to allow the server to access the session
-                xfbml      : true  // parse XFBML
-                });
+    <head>
+        <meta name="viewport" content="width=device-width,
+        user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        
+        <style type="text/css">
+            body {
+                margin: 0;
+                padding: 0;
+                background: #000;
+            }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #fff;
+        }
+        </style>
+        
+    </head>
+    
+    <body>
+        <canvas>
+        </canvas>
+        
+        <div style="position: absolute; top: 20%; left: 40%; color: white;">
+            <h2>Welcome to TruckYummy!</h2>
+            <center>
+                <h3 style="margin-bottom: 0px;"><a href="#" onclick="testAPI();">Log in with Facebook!</a></h3>
                 
-                // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-                // for any authentication related change, such as login, logout or session refresh. This means that
-                // whenever someone who was previously logged out tries to log in again, the correct case below
-                // will be handled.
-                FB.Event.subscribe('auth.authResponseChange', function(response) {
-                                   // Here we specify what we do with the response anytime this event occurs.
-                                   if (response.status === 'connected') {
-                                   // The response object is returned with a status field that lets the app know the current
-                                   // login status of the person. In this case, we're handling the situation where they
-                                   // have logged in to the app.
-                                   testAPI();
-                                   } else if (response.status === 'not_authorized') {
-                                   // In this case, the person is logged into Facebook, but not into the app, so we call
-                                   // FB.login() to prompt them to do so.
-                                   // In real-life usage, you wouldn't want to immediately prompt someone to login
-                                   // like this, for two reasons:
-                                   // (1) JavaScript created popup windows are blocked by most browsers unless they
-                                   // result from direct interaction from people using the app (such as a mouse click)
-                                   // (2) it is a bad experience to be continually prompted to login upon page load.
-                                   FB.login();
-                                   } else {
-                                   // In this case, the person is not logged into Facebook, so we call the login()
-                                   // function to prompt them to do so. Note that at this stage there is no indication
-                                   // of whether they are logged into the app. If they aren't then they'll see the Login
-                                   // dialog right after they log in to Facebook.
-                                   // The same caveats as above apply to the FB.login() call here.
-                                   FB.login();
-                                   }
-								   window.location = "http://wabash.parseapp.com/game.html";
-
-                                   }
-	   );
-    };
-
-// Load the SDK asynchronously
-(function(d){
- var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
- if (d.getElementById(id)) {return;}
- js = d.createElement('script'); js.id = id; js.async = true;
- js.src = "//connect.facebook.net/en_US/all.js";
- ref.parentNode.insertBefore(js, ref);
- }(document));
- 
- // Here we run a very simple test of the Graph API after login is successful. 
- // This testAPI() function is only called in those cases. 
- function testAPI() {
-     console.log('Welcome!  Fetching your information.... ');
-     FB.api('/me', function(response) {
-            console.log('Good to see you, ' + response.name + '.');
-            });
- }
-</script>
-
-<!--
- Below we include the Login Button social plugin. This button uses the JavaScript SDK to
- present a graphical Login button that triggers the FB.login() function when clicked. -->
-
-<fb:login-button show-faces="false" width="200" max-rows="1" style="position: absolute; bottom: 0px;"></fb:login-button>
-<script>
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       || 
-          window.webkitRequestAnimationFrame || 
-          window.mozRequestAnimationFrame    || 
-          window.oRequestAnimationFrame      || 
-          window.msRequestAnimationFrame     || 
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
-// namespace our game
-var POP = {
-
-    // set up some inital values
-    WIDTH: 320, 
-    HEIGHT:  480, 
-    scale:  1,
-    // the position of the canvas
-    // in relation to the screen
-    offset: {top: 0, left: 0},
-    // store all bubble, touches, particles etc
-    entities: [],
-    // the amount of game ticks until
-    // we spawn a bubble
-    nextBubble: 100,
-    // for tracking player's progress
-    score: {
-        taps: 0,
-        hit: 0,
-        escaped: 0,
-        //accuracy: 0
-    },
-    // we'll set the rest of these
-    // in the init function
-    RATIO:  null,
-    currentWidth:  null,
-    currentHeight:  null,
-    canvas: null,
-    ctx:  null,
-    ua:  null,
-    android: null,
-    ios:  null,
-
-    init: function() {
-   
-        // the proportion of width to height
-        POP.RATIO = POP.WIDTH / POP.HEIGHT;
-        // these will change when the screen is resize
-        POP.currentWidth = POP.WIDTH;
-        POP.currentHeight = POP.HEIGHT;
-        // this is our canvas element
-        POP.canvas = document.getElementsByTagName('canvas')[0];
-        // it's important to set this
-        // otherwise the browser will
-        // default to 320x200
-        POP.canvas.width = POP.WIDTH;
-        POP.canvas.height = POP.HEIGHT;
-        // the canvas context allows us to 
-        // interact with the canvas api
-        POP.ctx = POP.canvas.getContext('2d');
-        // we need to sniff out android & ios
-        // so we can hide the address bar in
-        // our resize function
-        POP.ua = navigator.userAgent.toLowerCase();
-        POP.android = POP.ua.indexOf('android') > -1 ? true : false;
-        POP.ios = ( POP.ua.indexOf('iphone') > -1 || POP.ua.indexOf('ipad') > -1  ) ? true : false;
-
-        // set up our wave effect
-        // basically, a series of overlapping circles
-        // across the top of screen
-        POP.wave = {
-            x: -25, // x coord of first circle
-            y: -40, // y coord of first circle
-            r: 50, // circle radius
-            time: 100, // we'll use this in calculating the sine wave
-            offset: 0 // this will be the sine wave offset
-        }; 
-        // calculate how many circles we need to 
-        // cover the screen width
-        POP.wave.total = Math.ceil(POP.WIDTH / POP.wave.r) + 1;
-
-        // listen for clicks
-//        window.addEventListener('click', function(e) {
-//            e.preventDefault();
-//            POP.Input.set(e);
-//        }, false);
-
-        // listen for touches
-        window.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            // the event object has an array
-            // called touches, we just want
-            // the first touch
-            POP.Input.set(e.touches[0]);
-        }, false);
-        window.addEventListener('touchmove', function(e) {
-            // we're not interested in this
-            // but prevent default behaviour
-            // so the screen doesn't scroll
-            // or zoom
-            e.preventDefault();
-        }, false);
-        window.addEventListener('touchend', function(e) {
-            // as above
-            e.preventDefault();
-        }, false);
-
-        // we're ready to resize
-        POP.resize();
-
-        POP.loop();
-
-    },
-
-
-    resize: function() {
-    
-        POP.currentHeight = window.innerHeight;
-        // resize the width in proportion
-        // to the new height
-        POP.currentWidth = POP.currentHeight * POP.RATIO;
-
-        // this will create some extra space on the
-        // page, allowing us to scroll pass
-        // the address bar, and thus hide it.
-        if (POP.android || POP.ios) {
-            document.body.style.height = (window.innerHeight + 50) + 'px';
-        }
-
-        // set the new canvas style width & height
-        // note: our canvas is still 320x480 but
-        // we're essentially scaling it with CSS
-        POP.canvas.style.width = POP.currentWidth + 'px';
-        POP.canvas.style.height = POP.currentHeight + 'px';
-
-        // the amount by which the css resized canvas
-        // is different to the actual (480x320) size.
-        POP.scale = POP.currentWidth / POP.WIDTH;
-        // position of canvas in relation to
-        // the screen
-        POP.offset.top = POP.canvas.offsetTop;
-        POP.offset.left = POP.canvas.offsetLeft;
-
-        // we use a timeout here as some mobile
-        // browsers won't scroll if there is not
-        // a small delay
-        window.setTimeout(function() {
-                window.scrollTo(0,1);
-        }, 1);
-    },
-
-    // this is where all entities will be moved
-    // and checked for collisions etc
-    update: function() {
-        var i,
-            checkCollision = false; // we only need to check for a collision
-                                // if the user tapped on this game tick
- 
-
-        // decrease our nextBubble counter
-        POP.nextBubble -= 1;
-        // if the counter is less than zero
-        if (POP.nextBubble < 0) {
-            // put a new instance of bubble into our entities array
-            POP.entities.push(new POP.Bubble());
-            // reset the counter with a random value
-            POP.nextBubble = ( Math.random() * 100 ) + 100;
-        }
-
-        // spawn a new instance of Touch
-        // if the user has tapped the screen
-        if (POP.Input.tapped) {
-            // keep track of taps; needed to 
-            // calculate accuracy
-            POP.score.taps += 1;
-            // add a new touch
-            POP.entities.push(new POP.Touch(POP.Input.x, POP.Input.y));
-            // set tapped back to false
-            // to avoid spawning a new touch
-            // in the next cycle
-            POP.Input.tapped = false;
-            checkCollision = true;
-        }
-
-        // cycle through all entities and update as necessary
-        for (i = 0; i < POP.entities.length; i += 1) {
-            POP.entities[i].update();
-
-            if (POP.entities[i].type === 'bubble' && checkCollision) {
-                hit = POP.collides(POP.entities[i], 
-                                    {x: POP.Input.x, y: POP.Input.y, r: 7});
-                if (hit) {
-                    // spawn an exposion
-                    for (var n = 0; n < 5; n +=1 ) {
-                        POP.entities.push(new POP.Particle(
-                            POP.entities[i].x, 
-                            POP.entities[i].y, 
-                            2, 
-                            // random opacity to spice it up a bit
-                            'rgba(255,255,255,'+Math.random()*1+')'
-                        )); 
-                    }
-                    POP.score.hit += 1;
+                <p>get 10% off</p>
+            </center>
+        </div>
+        <div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function () {
+                FB.init({
+                        appId: '631163546954262',
+                        status: true, // check login status
+                        cookie: true, // enable cookies to allow the server to access the session
+                        xfbml: true // parse XFBML
+                        });
+                        
+                        // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+                        // for any authentication related change, such as login, logout or session refresh. This means that
+                        // whenever someone who was previously logged out tries to log in again, the correct case below
+                        // will be handled.
+                        FB.Event.subscribe('auth.authResponseChange', function (response) {
+                                           // Here we specify what we do with the response anytime this event occurs.
+                                           if (response.status === 'connected') {
+                                           // The response object is returned with a status field that lets the app know the current
+                                           // login status of the person. In this case, we're handling the situation where they
+                                           // have logged in to the app.
+                                           testAPI();
+                                           } else if (response.status === 'not_authorized') {
+                                           // In this case, the person is logged into Facebook, but not into the app, so we call
+                                           // FB.login() to prompt them to do so.
+                                           // In real-life usage, you wouldn't want to immediately prompt someone to login
+                                           // like this, for two reasons:
+                                           // (1) JavaScript created popup windows are blocked by most browsers unless they
+                                           // result from direct interaction from people using the app (such as a mouse click)
+                                           // (2) it is a bad experience to be continually prompted to login upon page load.
+                                           FB.login();
+                                           } else {
+                                           // In this case, the person is not logged into Facebook, so we call the login()
+                                           // function to prompt them to do so. Note that at this stage there is no indication
+                                           // of whether they are logged into the app. If they aren't then they'll see the Login
+                                           // dialog right after they log in to Facebook.
+                                           // The same caveats as above apply to the FB.login() call here.
+                                           FB.login();
+                                           }
+                                           window.location = "http://wabash.parseapp.com/game.html";
+                                           
+                                           });
+            };
+        
+        // Load the SDK asynchronously
+        (function (d) {
+         var js, id = 'facebook-jssdk',
+         ref = d.getElementsByTagName('script')[0];
+         if (d.getElementById(id)) {
+         return;
+         }
+         js = d.createElement('script');
+         js.id = id;
+         js.async = true;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         ref.parentNode.insertBefore(js, ref);
+         }(document));
+         
+         // Here we run a very simple test of the Graph API after login is successful.
+         // This testAPI() function is only called in those cases.
+         function testAPI() {
+             console.log('Welcome!  Fetching your information.... ');
+             FB.api('/me', function (response) {
+                    console.log('Good to see you, ' + response.name + '.');
+                    });
+         }
+        </script>
+        
+        <!--
+         Below we include the Login Button social plugin. This button uses the JavaScript SDK to
+         present a graphical Login button that triggers the FB.login() function when clicked. -->
+        
+        <fb:login-button show-faces="false" width="200" max-rows="1" style="position: absolute; bottom: 0px;"></fb:login-button>
+            <script>
+                window.requestAnimFrame = (function () {
+                                           return window.requestAnimationFrame ||
+                                           window.webkitRequestAnimationFrame ||
+                                           window.mozRequestAnimationFrame ||
+                                           window.oRequestAnimationFrame ||
+                                           window.msRequestAnimationFrame ||
+                                           function (callback) {
+                                           window.setTimeout(callback, 1000 / 60);
+                                           };
+                                           })();
+                                           
+                                           // namespace our game
+                                           var POP = {
+                                               
+                                               // set up some inital values
+                                               WIDTH: 320,
+                                               HEIGHT: 480,
+                                               scale: 1,
+                                               // the position of the canvas
+                                               // in relation to the screen
+                                               offset: {
+                                                   top: 0,
+                                                   left: 0
+                                               },
+                                               // store all bubble, touches, particles etc
+                                               entities: [],
+                                               // the amount of game ticks until
+                                               // we spawn a bubble
+                                               nextBubble: 100,
+                                               // for tracking player's progress
+                                               score: {
+                                                   taps: 0,
+                                                   hit: 0,
+                                                   escaped: 0,
+                                                   //accuracy: 0
+                                               },
+                                               // we'll set the rest of these
+                                               // in the init function
+                                               RATIO: null,
+                                               currentWidth: null,
+                                               currentHeight: null,
+                                               canvas: null,
+                                               ctx: null,
+                                               ua: null,
+                                               android: null,
+                                               ios: null,
+                                               
+                                               init: function () {
+                                                   
+                                                   // the proportion of width to height
+                                                   POP.RATIO = POP.WIDTH / POP.HEIGHT;
+                                                   // these will change when the screen is resize
+                                                   POP.currentWidth = POP.WIDTH;
+                                                   POP.currentHeight = POP.HEIGHT;
+                                                   // this is our canvas element
+                                                   POP.canvas = document.getElementsByTagName('canvas')[0];
+                                                   // it's important to set this
+                                                   // otherwise the browser will
+                                                   // default to 320x200
+                                                   POP.canvas.width = POP.WIDTH;
+                                                   POP.canvas.height = POP.HEIGHT;
+                                                   // the canvas context allows us to
+                                                   // interact with the canvas api
+                                                   POP.ctx = POP.canvas.getContext('2d');
+                                                   // we need to sniff out android & ios
+                                                   // so we can hide the address bar in
+                                                   // our resize function
+                                                   POP.ua = navigator.userAgent.toLowerCase();
+                                                   POP.android = POP.ua.indexOf('android') > -1 ? true : false;
+                                                   POP.ios = (POP.ua.indexOf('iphone') > -1 || POP.ua.indexOf('ipad') > -1) ? true : false;
+                                                   
+                                                   // set up our wave effect
+                                                   // basically, a series of overlapping circles
+                                                   // across the top of screen
+                                                   POP.wave = {
+                                                       x: -25, // x coord of first circle
+                                                       y: -40, // y coord of first circle
+                                                       r: 50, // circle radius
+                                                       time: 100, // we'll use this in calculating the sine wave
+                                                       offset: 0 // this will be the sine wave offset
+                                                   };
+                                                   // calculate how many circles we need to
+                                                   // cover the screen width
+                                                   POP.wave.total = Math.ceil(POP.WIDTH / POP.wave.r) + 1;
+                                                   
+                                                   // listen for clicks
+                                                   //        window.addEventListener('click', function(e) {
+                                                   //            e.preventDefault();
+                                                   //            POP.Input.set(e);
+                                                   //        }, false);
+                                                   
+                                                   // listen for touches
+                                                   window.addEventListener('touchstart', function (e) {
+                                                                           e.preventDefault();
+                                                                           // the event object has an array
+                                                                           // called touches, we just want
+                                                                           // the first touch
+                                                                           POP.Input.set(e.touches[0]);
+                                                                           }, false);
+                                                                           window.addEventListener('touchmove', function (e) {
+                                                                                                   // we're not interested in this
+                                                                                                   // but prevent default behaviour
+                                                                                                   // so the screen doesn't scroll
+                                                                                                   // or zoom
+                                                                                                   e.preventDefault();
+                                                                                                   }, false);
+                                                                                                   window.addEventListener('touchend', function (e) {
+                                                                                                                           // as above
+                                                                                                                           e.preventDefault();
+                                                                                                                           }, false);
+                                                                                                                           
+                                                                                                                           // we're ready to resize
+                                                                                                                           POP.resize();
+                                                                                                                           
+                                                                                                                           POP.loop();
+                                                                                                                           
+                                               },
+                                               
+                                               
+                                               resize: function () {
+                                                   
+                                                   POP.currentHeight = window.innerHeight;
+                                                   // resize the width in proportion
+                                                   // to the new height
+                                                   POP.currentWidth = POP.currentHeight * POP.RATIO;
+                                                   
+                                                   // this will create some extra space on the
+                                                   // page, allowing us to scroll pass
+                                                   // the address bar, and thus hide it.
+                                                   if (POP.android || POP.ios) {
+                                                       document.body.style.height = (window.innerHeight + 50) + 'px';
+                                                   }
+                                                   
+                                                   // set the new canvas style width & height
+                                                   // note: our canvas is still 320x480 but
+                                                   // we're essentially scaling it with CSS
+                                                   POP.canvas.style.width = POP.currentWidth + 'px';
+                                                   POP.canvas.style.height = POP.currentHeight + 'px';
+                                                   
+                                                   // the amount by which the css resized canvas
+                                                   // is different to the actual (480x320) size.
+                                                   POP.scale = POP.currentWidth / POP.WIDTH;
+                                                   // position of canvas in relation to
+                                                   // the screen
+                                                   POP.offset.top = POP.canvas.offsetTop;
+                                                   POP.offset.left = POP.canvas.offsetLeft;
+                                                   
+                                                   // we use a timeout here as some mobile
+                                                   // browsers won't scroll if there is not
+                                                   // a small delay
+                                                   window.setTimeout(function () {
+                                                                     window.scrollTo(0, 1);
+                                                                     }, 1);
+                                               },
+                                               
+                                               // this is where all entities will be moved
+                                               // and checked for collisions etc
+                                               update: function () {
+                                                   var i,
+                                                   checkCollision = false; // we only need to check for a collision
+                                                   // if the user tapped on this game tick
+                                                   
+                                                   
+                                                   // decrease our nextBubble counter
+                                                   POP.nextBubble -= 1;
+                                                   // if the counter is less than zero
+                                                   if (POP.nextBubble < 0) {
+                                                       // put a new instance of bubble into our entities array
+                                                       POP.entities.push(new POP.Bubble());
+                                                       // reset the counter with a random value
+                                                       POP.nextBubble = (Math.random() * 100) + 100;
+                                                   }
+                                                   
+                                                   // spawn a new instance of Touch
+                                                   // if the user has tapped the screen
+                                                   if (POP.Input.tapped) {
+                                                       // keep track of taps; needed to 
+                                                       // calculate accuracy
+                                                       POP.score.taps += 1;
+                                                       // add a new touch
+                                                       POP.entities.push(new POP.Touch(POP.Input.x, POP.Input.y));
+                                                       // set tapped back to false
+                                                       // to avoid spawning a new touch
+                                                       // in the next cycle
+                                                       POP.Input.tapped = false;
+                                                       checkCollision = true;
+                                                   }
+                                                   
+                                                   // cycle through all entities and update as necessary
+                                                   for (i = 0; i < POP.entities.length; i += 1) {
+                                                       POP.entities[i].update();
+                                                       
+                                                       if (POP.entities[i].type === 'bubble' && checkCollision) {
+                                                           hit = POP.collides(POP.entities[i], {
+                                                                              x: POP.Input.x,
+                                                                              y: POP.Input.y,
+                                                                              r: 7
+                                                                              });
+                                                                              if (hit) {
+                                                                                  // spawn an exposion
+                                                                                  for (var n = 0; n < 5; n += 1) {
+                                                                                      POP.entities.push(new POP.Particle(
+                                                                                                                         POP.entities[i].x,
+                                                                                                                         POP.entities[i].y,
+                                                                                                                         2,
+                                                                                                                         // random opacity to spice it up a bit
+                                                                                                                         'rgba(255,255,255,' + Math.random() * 1 + ')'
+                                                                                                                         ));
+                                                                                  }
+                                                                                  POP.score.hit += 1;
+                                                                              }
+                                                                              
+                                                                              POP.entities[i].remove = hit;
+                                                       }
+                                                       
+                                                       // delete from array if remove property
+                                                       // flag is set to true
+                                                       if (POP.entities[i].remove) {
+                                                           POP.entities.splice(i, 1);
+                                                       }
+                                                   }
+                                                   
+                                                   // update wave offset
+                                                   // feel free to play with these values for
+                                                   // either slower or faster waves
+                                                   POP.wave.time = 10 //new Date().getTime() * 0.02;
+                                                   POP.wave.offset = 0 //Math.sin(POP.wave.time * 0.8) * 5;
+                                                   
+                                               },
+                                               
+                                               
+                                               // this is where we draw all the entities
+                                               render: function () {
+                                                   
+                                                   var i;
+                                                   
+                                                   
+                                                   POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, '#036');
+                                                   
+                                                   // display snazzy wave effect
+                                                   for (i = 0; i < POP.wave.total; i++) {
+                                                       
+                                                       //            POP.Draw.circle(
+                                                       //                        POP.wave.x + POP.wave.offset +  (i * POP.wave.r),
+                                                       //                        POP.wave.y,
+                                                       //                        POP.wave.r,
+                                                       //                        '#fff');
+                                                   }
+                                                   
+                                                   // cycle through all entities and render to canvas
+                                                   for (i = 0; i < POP.entities.length; i += 1) {
+                                                       POP.entities[i].render();
+                                                   }
+                                                   
+                                               },
+                                               
+                                               
+                                               // the actual loop
+                                               // requests animation frame
+                                               // then proceeds to update
+                                               // and render
+                                               loop: function () {
+                                                   
+                                                   requestAnimFrame(POP.loop);
+                                                   
+                                                   POP.render();
+                                               }
+                                               
+                                               
+                                           };
+            
+            
+            // abstracts various canvas operations into
+            // standalone functions
+            POP.Draw = {
+                
+                clear: function () {
+                    POP.ctx.clearRect(0, 0, POP.WIDTH, POP.HEIGHT);
+                },
+                
+                
+                rect: function (x, y, w, h, col) {
+                    POP.ctx.fillStyle = col;
+                    POP.ctx.fillRect(x, y, w, h);
+                },
+                
+                circle: function (x, y, r, col) {
+                    POP.ctx.fillStyle = col;
+                    POP.ctx.beginPath();
+                    POP.ctx.arc(x + 5, y + 5, r, 0, Math.PI * 2, true);
+                    POP.ctx.closePath();
+                    POP.ctx.fill();
+                },
+                
+                
+                text: function (string, x, y, size, col) {
+                    POP.ctx.font = 'bold ' + size + 'px Monospace';
+                    POP.ctx.fillStyle = col;
+                    POP.ctx.fillText(string, x, y);
                 }
-
-                POP.entities[i].remove = hit;
-            }
-
-            // delete from array if remove property
-            // flag is set to true
-            if (POP.entities[i].remove) {
-                POP.entities.splice(i, 1);
-            }
-        }
-
-        // update wave offset
-        // feel free to play with these values for
-        // either slower or faster waves
-        POP.wave.time = 10 //new Date().getTime() * 0.02;
-        POP.wave.offset = 0 //Math.sin(POP.wave.time * 0.8) * 5;
-
-    },
-
-
-    // this is where we draw all the entities
-    render: function() {
-
-        var i;
-
-
-        POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, '#036');
-
-        // display snazzy wave effect
-        for (i = 0; i < POP.wave.total; i++) {
-
-//            POP.Draw.circle(
-//                        POP.wave.x + POP.wave.offset +  (i * POP.wave.r),
-//                        POP.wave.y,
-//                        POP.wave.r,
-//                        '#fff');
-        }
-
-            // cycle through all entities and render to canvas
-            for (i = 0; i < POP.entities.length; i += 1) {
-                POP.entities[i].render();
-        }
-
-    },
-
-
-    // the actual loop
-    // requests animation frame
-    // then proceeds to update
-    // and render
-    loop: function() {
-
-        requestAnimFrame( POP.loop );
-
-        POP.render();
-    }
-
-
-};
-
-
-// abstracts various canvas operations into
-// standalone functions
-POP.Draw = {
-
-    clear: function() {
-        POP.ctx.clearRect(0, 0, POP.WIDTH, POP.HEIGHT);
-    },
-
-
-    rect: function(x, y, w, h, col) {
-        POP.ctx.fillStyle = col;
-        POP.ctx.fillRect(x, y, w, h);
-    },
-
-    circle: function(x, y, r, col) {
-        POP.ctx.fillStyle = col;
-        POP.ctx.beginPath();
-        POP.ctx.arc(x + 5, y + 5, r, 0,  Math.PI * 2, true);
-        POP.ctx.closePath();
-        POP.ctx.fill();
-    },
-
-
-    text: function(string, x, y, size, col) {
-        POP.ctx.font = 'bold '+size+'px Monospace';
-        POP.ctx.fillStyle = col;
-        POP.ctx.fillText(string, x, y);
-    }
-
-};
-
-
-window.addEventListener('load', POP.init, false);
-window.addEventListener('resize', POP.resize, false);
-
-</script>
-
-</body>
+                
+            };
+            
+            
+            window.addEventListener('load', POP.init, false);
+            window.addEventListener('resize', POP.resize, false);
+                </script>
+            
+    </body>
+    
 </html>

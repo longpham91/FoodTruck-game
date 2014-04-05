@@ -18,12 +18,37 @@ canvas { display: block; margin: 0 auto; background: #fff; }
 <div id="sad-face" style="position: absolute; top: 20%; left: 46%; display: none; color: White;">
     <img src="img/sad-face.png" alt="" style="width: 100px; height: 100px;" />
     <center>
-        <a href="#">Share your score!</a>
+        <a href="#" onClick="document.location.href=postToFeed();">Share your score!</a>
         <br />
         <a href="#">Play Again</<a>
     </center>
 </div>
 <script src="http://cdn.html5quintus.com/v0.2.0/quintus-all.js"></script>
+<script>
+
+function postToFeed() {
+  // call the API
+  var obj = {
+    method: 'feed',
+    link: 'http://wabash.parseapp.com/game.html',
+    picture: "img/Food_Truck_fblogo.jpg",
+    name: '#BOTY',
+    caption: 'Everything is Awesome!  My score is: ' + POP.score.hit,
+    actions: [
+      {'name': 'get reward', 'link': 'http://example.com/redeem_reward'}
+    ],
+    description: 'Action links are awesome.'
+  };
+
+  function callback(response) {
+    console.log(response);
+  }
+
+  FB.ui(obj, callback);
+}
+
+</script>
+
 <script>
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       || 

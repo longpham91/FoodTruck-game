@@ -181,11 +181,10 @@
                            var decodedPng = Base64Binary.decode(encodedPng);
                 var obj = {
                     method: 'feed',
-                   link: 'http://wabash.parseapp.com/game.html',
+                   link: 'http://wabash.parseapp.com/index.html',
 //                    picture: "http://wabash.parseapp.com/img/Food_Truck_fblogo.jpg",
-                   //name: 'Battle of the Yummies',
-                   description: 'My score is: ' + POP.score.hit + '!',
-//                    description: 'Action links are awesome.'
+                    name: 'Battle of the Yummies',
+                    description: 'My score is: ' + POP.score.hit + '!',
                            
 				   picture: "http://wabash.parseapp.com/img/map-image.png"
 
@@ -427,14 +426,8 @@
                                                // update wave offset
                                                // feel free to play with these values for
                                                // either slower or faster waves
-                                               POP.wave.time = 1 //new Date().getTime() * 0.02;
-                                               POP.wave.offset = 0 //Math.sin(POP.wave.time * 0.8) * 5;
-                                               
-                                               // calculate accuracy
-                                               //        POP.score.accuracy = (POP.score.hit / POP.score.taps) * 100;
-                                               //        POP.score.accuracy = isNaN(POP.score.accuracy) ?
-                                               //            0 :
-                                               //            ~~(POP.score.accuracy); // a handy way to round floats
+                                               POP.wave.time = 1
+                                               POP.wave.offset = 0
                                                
                                            },
                                            
